@@ -1,0 +1,14 @@
+build/
+*.o
+*.out
+*.exe
+
+data/raw/*
+results/figures/*
+analysis/notebooks/*
+
+__pycache__/
+*.pyc
+.env
+
+.vscode/
