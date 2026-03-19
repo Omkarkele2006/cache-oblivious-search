@@ -132,3 +132,38 @@ This motivates the need for:
   - improved memory locality
 
 This establishes a strong baseline for evaluating **cache-oblivious structures (vEB layout)** in the next phase.
+---
+
+## Cache-Oblivious (vEB) Observations
+
+### Key Findings
+
+1. **Build Performance**
+   - vEB layout construction is efficient and scales well
+   - Comparable or faster than BST and B-Tree insertion
+
+2. **Search Performance**
+   - Current implementation uses linear search (O(n))
+   - Results do not reflect true vEB theoretical performance
+
+3. **Interpretation**
+
+> The observed slowdown in vEB search is due to the simplified implementation and not an inherent limitation of the vEB layout.
+
+4. **Research Insight**
+
+- vEB layout improves spatial locality
+- Eliminates dependency on cache parameters
+- Provides a strong foundation for cache-efficient search structures
+
+---
+
+## Final Insight
+
+| Structure | Strength |
+|----------|--------|
+| BST | Simple, fast for random input |
+| B-Tree | Robust, cache-aware |
+| vEB | Cache-oblivious, layout-optimized |
+
+---

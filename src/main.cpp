@@ -1,14 +1,17 @@
 #include <iostream>
-#include "structures/btree/btree.hpp"
+#include "structures/veb/veb_layout.hpp"
+#include "structures/veb/veb_tree.hpp"
 
 int main() {
-    BTree tree;
+    std::vector<int> data = {10, 20, 5, 15, 30};
 
-    tree.insert(10);
-    tree.insert(20);
-    tree.insert(5);
+    VEBLayout layout_builder;
+    layout_builder.construct(data);
 
-    std::cout << tree.search(10) << std::endl; // 1
+    VEBTree tree;
+    tree.build(layout_builder.get_layout());
+
+    std::cout << tree.search(15) << std::endl; // 1
     std::cout << tree.search(99) << std::endl; // 0
 
     return 0;

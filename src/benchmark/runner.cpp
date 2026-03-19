@@ -1,7 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-
+#include "../structures/veb/veb_layout.hpp"
+#include "../structures/veb/veb_tree.hpp"
+#include <algorithm>
 #include "../common/timer.hpp"
 #include "../structures/bst/bst.hpp"
 #include "../structures/btree/btree.hpp"
@@ -74,10 +76,45 @@ double btree_search(const std::vector<int>& data) {
 
     return total / NUM_RUNS;
 }
+// ---------------- VEB ----------------
+double veb_build(const std::vector<int>& data) {
+    double total = 0;
 
+    for (int i = 0; i < NUM_RUNS; i++) {
+        VEBLayout layout;
+        Timer t;
+
+        t.start();
+        layout.construct(data);
+        total += t.stop();
+    }
+
+    return total / NUM_RUNS;
+}
+
+double veb_search(const std::vector<int>& data) {
+    // Build once
+    VEBLayout layout_builder;
+    layout_builder.construct(data);
+
+    VEBTree tree;
+    tree.build(layout_builder.get_layout());
+
+    double total = 0;
+
+    for (int i = 0; i < NUM_RUNS; i++) {
+        Timer t;
+
+        t.start();
+        for (int x : data) tree.search(x);
+        total += t.stop();
+    }
+
+    return total / NUM_RUNS;
+}
 int main() {
     std::ofstream outfile("results.csv");
-    outfile << "structure,workload,n,insert_ms,search_ms\n";
+    outfile << "structure,workload,n,build_ms,search_ms\n";
 
     std::vector<int> sizes = {1000, 5000, 10000, 20000};
 
@@ -115,6 +152,22 @@ int main() {
 
             outfile << "BTree," << type << "," << n << ","
                     << bt_ins << "," << bt_srch << "\n";
+
+            // -------- VEB --------
+            std::cout << "[vEB] Workload: " << type << std::endl;
+
+            // vEB requires sorted data
+            std::vector<int> sorted_data = data;
+            std::sort(sorted_data.begin(), sorted_data.end());
+
+            double veb_bld = veb_build(sorted_data);
+            double veb_srch = veb_search(sorted_data);
+
+            std::cout << "Build: " << veb_bld << " ms\n";
+            std::cout << "Search: " << veb_srch << " ms\n";
+
+            outfile << "vEB," << type << "," << n << ","
+                    << veb_bld << "," << veb_srch << "\n";        
         }
     }
 
