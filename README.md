@@ -90,3 +90,45 @@ This motivates the need for:
 ✅ Benchmarking pipeline ready  
 ✅ Multi-workload evaluation complete  
 🚧 Cache-aware & cache-oblivious structures (in progress)
+---
+
+## Comparative Results: BST vs B-Tree
+
+### Key Findings
+
+1. **Uniform Workload**
+   - BST performs slightly faster due to lower overhead
+   - B-Tree introduces additional cost from node management
+
+2. **Adversarial Workloads (Sorted / Reverse)**
+
+   - BST shows catastrophic degradation:
+     - O(n²) behavior
+     - Extremely high latency
+
+   - B-Tree remains stable:
+     - O(n log n)
+     - Consistent performance
+
+### Example (n = 20000)
+
+| Structure | Insert Time |
+|----------|------------|
+| BST (sorted) | ~2910 ms |
+| B-Tree (sorted) | ~9.7 ms |
+
+### Insight
+
+> B-Trees are significantly more robust to input distribution and provide stable performance across workloads, making them suitable for memory-hierarchy-aware systems.
+
+---
+
+## Conclusion (Current Phase)
+
+- BST is efficient only under favorable conditions
+- B-Tree provides:
+  - structural balance
+  - input robustness
+  - improved memory locality
+
+This establishes a strong baseline for evaluating **cache-oblivious structures (vEB layout)** in the next phase.

@@ -1,50 +1,78 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+
 #include "../common/timer.hpp"
 #include "../structures/bst/bst.hpp"
+#include "../structures/btree/btree.hpp"
 #include "workload_generator.hpp"
 
 const int NUM_RUNS = 5;
 
-double benchmark_insert(const std::vector<int>& data) {
-    double total_time = 0.0;
+// ---------------- BST ----------------
+double bst_insert(const std::vector<int>& data) {
+    double total = 0;
 
-    for (int i = 0; i < NUM_RUNS; ++i) {
+    for (int i = 0; i < NUM_RUNS; i++) {
         BST tree;
-        Timer timer;
+        Timer t;
 
-        timer.start();
-        for (int x : data) {
-            tree.insert(x);
-        }
-        total_time += timer.stop();
+        t.start();
+        for (int x : data) tree.insert(x);
+        total += t.stop();
     }
 
-    return total_time / NUM_RUNS;
+    return total / NUM_RUNS;
 }
 
-double benchmark_search(const std::vector<int>& data) {
+double bst_search(const std::vector<int>& data) {
     BST tree;
+    for (int x : data) tree.insert(x);
 
-    // Preload tree
-    for (int x : data) {
-        tree.insert(x);
+    double total = 0;
+
+    for (int i = 0; i < NUM_RUNS; i++) {
+        Timer t;
+
+        t.start();
+        for (int x : data) tree.search(x);
+        total += t.stop();
     }
 
-    double total_time = 0.0;
+    return total / NUM_RUNS;
+}
 
-    for (int i = 0; i < NUM_RUNS; ++i) {
-        Timer timer;
+// ---------------- B-TREE ----------------
+double btree_insert(const std::vector<int>& data) {
+    double total = 0;
 
-        timer.start();
-        for (int x : data) {
-            tree.search(x);
-        }
-        total_time += timer.stop();
+    for (int i = 0; i < NUM_RUNS; i++) {
+        BTree tree;
+        Timer t;
+
+        t.start();
+        for (int x : data) tree.insert(x);
+        total += t.stop();
     }
 
-    return total_time / NUM_RUNS;
+    return total / NUM_RUNS;
+}
+
+double btree_search(const std::vector<int>& data) {
+    BTree tree;
+    for (int x : data) tree.insert(x);
+
+    double total = 0;
+
+    for (int i = 0; i < NUM_RUNS; i++) {
+        Timer t;
+
+        t.start();
+        for (int x : data) tree.search(x);
+        total += t.stop();
+    }
+
+    return total / NUM_RUNS;
 }
 
 int main() {
@@ -56,7 +84,6 @@ int main() {
     for (int n : sizes) {
         std::cout << "\n===== n = " << n << " =====\n";
 
-        // 3 workloads
         std::vector<std::pair<std::string, std::vector<int>>> workloads = {
             {"uniform", WorkloadGenerator::generate_uniform(n)},
             {"sorted", WorkloadGenerator::generate_sorted(n)},
@@ -64,16 +91,30 @@ int main() {
         };
 
         for (auto& [type, data] : workloads) {
-            std::cout << "Workload: " << type << std::endl;
 
-            double insert_time = benchmark_insert(data);
-            double search_time = benchmark_search(data);
+            // -------- BST --------
+            std::cout << "[BST] Workload: " << type << std::endl;
 
-            std::cout << "Insert: " << insert_time << " ms\n";
-            std::cout << "Search: " << search_time << " ms\n";
+            double bst_ins = bst_insert(data);
+            double bst_srch = bst_search(data);
+
+            std::cout << "Insert: " << bst_ins << " ms\n";
+            std::cout << "Search: " << bst_srch << " ms\n";
 
             outfile << "BST," << type << "," << n << ","
-                    << insert_time << "," << search_time << "\n";
+                    << bst_ins << "," << bst_srch << "\n";
+
+            // -------- B-TREE --------
+            std::cout << "[BTree] Workload: " << type << std::endl;
+
+            double bt_ins = btree_insert(data);
+            double bt_srch = btree_search(data);
+
+            std::cout << "Insert: " << bt_ins << " ms\n";
+            std::cout << "Search: " << bt_srch << " ms\n";
+
+            outfile << "BTree," << type << "," << n << ","
+                    << bt_ins << "," << bt_srch << "\n";
         }
     }
 
