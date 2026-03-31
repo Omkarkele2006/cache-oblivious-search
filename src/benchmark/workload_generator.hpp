@@ -13,7 +13,7 @@ public:
         std::vector<int> data;
         data.reserve(n);
 
-        std::mt19937 gen(std::random_device{}());
+        std::mt19937 gen(42);  // fixed seed for reproducibility
         std::uniform_int_distribution<> dist(min, max);
 
         for (int i = 0; i < n; ++i) {

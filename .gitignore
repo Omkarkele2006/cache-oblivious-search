@@ -1,14 +1,28 @@
+# Build
 build/
 *.o
 *.out
 *.exe
+runner
 
+# Data
 data/raw/*
-results/figures/*
-analysis/notebooks/*
 
+# small sample datasets 
+!data/raw/uniform_1000.csv
+!data/raw/sorted_1000.csv
+
+# Results
+results/figures/
+
+
+# Python
 __pycache__/
 *.pyc
 .env
 
+# IDE
 .vscode/
+
+# Notebooks
+analysis/notebooks/
