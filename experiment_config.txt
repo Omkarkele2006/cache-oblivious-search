@@ -1,0 +1,13 @@
+CPU: Intel i7-13620H
+Cores used: 0-7 (P-cores only)
+OS: Ubuntu Live USB
+Compiler: g++ -O2
+Runs: NUM_RUNS = 5
+Input sizes: 1000, 5000, 10000, 20000
+Workloads: uniform, sorted, reverse
+Perf events:
+- cache-misses
+- cache-references
+- cycles
+- instructions
+- perf -d (detailed cache)
