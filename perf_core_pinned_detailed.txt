@@ -114,3 +114,35 @@ Search: 2.39975 ms
 [vEB] Workload: reverse
 Build: 2.34668 ms
 Search: 1.88177 ms
+
+ Performance counter stats for './runner':
+
+         38,011.82 msec task-clock                       #    0.998 CPUs utilized             
+             2,093      context-switches                 #   55.062 /sec                      
+               108      cpu-migrations                   #    2.841 /sec                      
+            10,854      page-faults                      #  285.543 /sec                      
+     <not counted>      cpu_atom/cycles/                                                        (0.00%)
+   143,619,646,467      cpu_core/cycles/                 #    3.778 GHz                       
+     <not counted>      cpu_atom/instructions/                                                  (0.00%)
+   167,335,249,646      cpu_core/instructions/                                                
+     <not counted>      cpu_atom/branches/                                                      (0.00%)
+    29,663,880,544      cpu_core/branches/               #  780.386 M/sec                     
+     <not counted>      cpu_atom/branch-misses/                                                 (0.00%)
+        23,737,608      cpu_core/branch-misses/                                               
+             TopdownL1 (cpu_core)                 #     71.9 %  tma_backend_bound      
+                                                  #      1.9 %  tma_bad_speculation    
+                                                  #      4.2 %  tma_frontend_bound     
+                                                  #     22.0 %  tma_retiring           
+     <not counted>      L1-dcache-loads                                                         (0.00%)
+    77,437,458,197      L1-dcache-loads                  #    2.037 G/sec                     
+   <not supported>      L1-dcache-load-misses                                                 
+    10,245,760,539      L1-dcache-load-misses                                                 
+     <not counted>      LLC-loads                                                               (0.00%)
+       151,654,922      LLC-loads                        #    3.990 M/sec                     
+     <not counted>      LLC-load-misses                                                         (0.00%)
+           820,982      LLC-load-misses                                                       
+
+      38.097392483 seconds time elapsed
+
+      37.991175000 seconds user
+       0.023984000 seconds sys

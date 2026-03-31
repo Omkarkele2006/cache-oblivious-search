@@ -114,3 +114,19 @@ Search: 2.44125 ms
 [vEB] Workload: reverse
 Build: 2.3463 ms
 Search: 1.85869 ms
+
+ Performance counter stats for './runner':
+
+     <not counted>      cpu_atom/cache-misses/                                                  (0.00%)
+         1,907,085      cpu_core/cache-misses/                                                
+     <not counted>      cpu_atom/cache-references/                                              (0.00%)
+     1,670,989,444      cpu_core/cache-references/                                            
+     <not counted>      cpu_atom/cycles/                                                        (0.00%)
+   143,124,472,767      cpu_core/cycles/                                                      
+     <not counted>      cpu_atom/instructions/                                                  (0.00%)
+   167,331,592,852      cpu_core/instructions/                                                
+
+      37.807366174 seconds time elapsed
+
+      37.732282000 seconds user
+       0.026993000 seconds sys
