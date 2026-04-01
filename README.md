@@ -104,7 +104,7 @@ This project implements and evaluates:
 
 ---
 
-## 🔥 FINAL BENCHMARK RESULTS (UPDATED)
+## FINAL BENCHMARK RESULTS (UPDATED)
 
 ### n = 1000
 
@@ -170,7 +170,7 @@ This project implements and evaluates:
 
 ---
 
-## 🔥 Key Insight
+## Key Insight
 
 > BST becomes **~556× slower** than vEB in worst-case (sorted input, n=20000).
 
@@ -187,7 +187,7 @@ This project implements and evaluates:
 
 ---
 
-## 📊 Basic Perf Results
+## Basic Perf Results
 
 * Cache references: **1,670,989,444**
 
@@ -201,7 +201,7 @@ This project implements and evaluates:
 
 ---
 
-## 📊 Detailed Cache Analysis
+## Detailed Cache Analysis
 
 * L1 loads: **77,437,458,197**
 
@@ -215,7 +215,7 @@ This project implements and evaluates:
 
 ---
 
-## 🧠 Topdown Analysis
+## Topdown Analysis
 
 * Backend bound: **71.9%**
 * Frontend bound: **4.2%**
@@ -224,7 +224,7 @@ This project implements and evaluates:
 
 ---
 
-## 🔥 Key Insight
+## Key Insight
 
 > Despite moderate L1 misses, extremely low LLC misses confirm strong spatial locality and effective cache utilization.
 
@@ -277,7 +277,7 @@ This work provides:
 
 # 12. Extended Large-Scale Results (1e6+)
 
-## 🚀 Uniform Workload (n = 1,000,000)
+## Uniform Workload (n = 1,000,000)
 
 | Structure | Insert/Build (ms) | Search (ms) |
 | --------- | ----------------- | ----------- |
@@ -287,7 +287,7 @@ This work provides:
 
 ---
 
-## 🔥 Key Observations
+## Key Observations
 
 * vEB vs BST (search):
 
@@ -297,11 +297,11 @@ This work provides:
 
   **488.243 / 39.1822 = 12.46×**
 
-👉 *vEB is ~10× faster than BST and ~12× faster than B-Tree at n = 1e6*
+*vEB is ~10× faster than BST and ~12× faster than B-Tree at n = 1e6*
 
 ---
 
-## 📊 Mid-scale Comparison (n = 100,000)
+## Mid-scale Comparison (n = 100,000)
 
 | Structure | Insert (ms) | Search (ms) |
 | --------- | ----------- | ----------- |
@@ -311,7 +311,7 @@ This work provides:
 
 ---
 
-## ⚠️ Worst Case (Sorted Input, n = 100,000)
+## Worst Case (Sorted Input, n = 100,000)
 
 | Structure | Insert (ms) | Search (ms) |
 | --------- | ----------- | ----------- |
@@ -321,17 +321,17 @@ This work provides:
 
 ---
 
-## 🔥 Critical Insight
+## Critical Insight
 
 * BST exhibits **catastrophic degradation** under sorted input
 * Insert time reaches **23.47 seconds** at n = 100,000
 * vEB remains under **2 ms build time**
 
-👉 Demonstrates clear **O(n²) vs cache-efficient behavior**
+Demonstrates clear **O(n²) vs cache-efficient behavior**
 
 ---
 
-## 📊 Scaling Trend (Uniform Workload)
+## Scaling Trend (Uniform Workload)
 
 | n       | BST Search (ms) | B-Tree Search (ms) | vEB Search (ms) |
 | ------- | --------------- | ------------------ | --------------- |
@@ -342,20 +342,20 @@ This work provides:
 
 ---
 
-## 🧠 Final Scaling Insight
+## Final Scaling Insight
 
 > Performance gap widens significantly with increasing input size, demonstrating the growing importance of cache locality at scale.
 
 ---
 
-## ⚠️ Experimental Notes
+## Experimental Notes
 
 * BST worst-case (sorted/reverse) skipped beyond **n = 100,000**
 * Reason: O(n²) behavior leads to impractical runtimes
 
 ---
 
-## 🔬 Combined Hardware + Scaling Insight
+## Combined Hardware + Scaling Insight
 
 > Low LLC miss rates combined with vEB’s recursive layout enable superior cache utilization, which becomes increasingly beneficial as dataset size grows.
 
@@ -363,13 +363,13 @@ This work provides:
 
 # 13. Extended Real-World Evaluation (Zipfian Distribution)
 
-## 📊 Zipfian Workload (Real-World Skewed Data)
+## Zipfian Workload (Real-World Skewed Data)
 
 Zipfian distribution models real-world scenarios where a small subset of values appears very frequently while the majority appear rarely.
 
 ---
 
-## 🚀 Large-Scale Results (n = 1,000,000)
+## Large-Scale Results (n = 1,000,000)
 
 | Structure | Insert/Build (ms) | Search (ms) |
 | --------- | ----------------- | ----------- |
@@ -379,7 +379,7 @@ Zipfian distribution models real-world scenarios where a small subset of values 
 
 ---
 
-## 🔥 Key Observations
+## Key Observations
 
 * BST vs vEB (Insert):
 
@@ -389,11 +389,11 @@ Zipfian distribution models real-world scenarios where a small subset of values 
 
   **169890 / 404.319 ≈ 420×**
 
-👉 *BST becomes extremely inefficient under skewed distributions*
+*BST becomes extremely inefficient under skewed distributions*
 
 ---
 
-## 📊 Mid-scale Behavior (n = 100,000)
+## Mid-scale Behavior (n = 100,000)
 
 | Structure | Insert (ms) | Search (ms) |
 | --------- | ----------- | ----------- |
@@ -403,7 +403,7 @@ Zipfian distribution models real-world scenarios where a small subset of values 
 
 ---
 
-## 📊 Scaling Trend (Zipfian Insert)
+## Scaling Trend (Zipfian Insert)
 
 | n       | BST Insert (ms) | B-Tree Insert (ms) | vEB Build (ms) |
 | ------- | --------------- | ------------------ | -------------- |
@@ -416,13 +416,13 @@ Zipfian distribution models real-world scenarios where a small subset of values 
 
 ---
 
-## 🧠 Key Insight
+## Key Insight
 
 > Zipfian distributions amplify structural imbalance in BSTs due to repeated key insertions, leading to severe performance degradation, while B-Trees and cache-oblivious vEB layouts remain stable.
 
 ---
 
-## 🔬 Combined Insight (All Workloads)
+## Combined Insight (All Workloads)
 
 | Workload | BST              | B-Tree | vEB  |
 | -------- | ---------------- | ------ | ---- |
@@ -432,14 +432,14 @@ Zipfian distribution models real-world scenarios where a small subset of values 
 
 ---
 
-## 🔥 Final Research Insight
+## Final Research Insight
 
 > Cache-oblivious vEB layouts consistently outperform both cache-unaware BSTs and cache-aware B-Trees across uniform, worst-case, and real-world (Zipfian) workloads, with performance advantages becoming dramatically more pronounced at scale.
 
 ---
 # 14. Memory Footprint Analysis
 
-## 📊 Memory Usage Across Structures
+## Memory Usage Across Structures
 
 Memory usage was estimated analytically based on structural design:
 
@@ -449,7 +449,7 @@ Memory usage was estimated analytically based on structural design:
 
 ---
 
-## 🚀 Results
+## Results
 
 | n       | BST (bytes)  | B-Tree (bytes) | vEB (bytes) |
 | ------- | ------------ | -------------- | ----------- |
@@ -460,7 +460,7 @@ Memory usage was estimated analytically based on structural design:
 
 ---
 
-## 🔥 Key Observations
+## Key Observations
 
 * BST uses **5× more memory than vEB**
 * B-Tree uses **2× more memory than vEB**
@@ -468,18 +468,18 @@ Memory usage was estimated analytically based on structural design:
 
 ---
 
-## 🧠 Insight
+## Insight
 
 > Pointer-heavy structures like BST incur significant memory overhead due to node allocations and pointers, whereas cache-oblivious layouts such as vEB achieve compact memory representation through contiguous storage.
 
 ---
 
-## 🔬 Implication
+## Implication
 
 * Lower memory footprint → better cache utilization
 * Better cache utilization → faster performance
 
-👉 Explains why **vEB outperforms BST and B-Tree at scale**
+Explains why **vEB outperforms BST and B-Tree at scale**
 
 ---
 
@@ -497,16 +497,15 @@ taskset -c 0-7 perf stat -d ./runner
 
 # 16. Status
 
-* ✅ BST implemented
-* ✅ B-Tree implemented
-* ✅ vEB implemented (correct)
-* ✅ Benchmarking complete
-* ✅ Hardware profiling complete
-* ✅ Graphs generated
-* ✅ Large-scale evaluation (1e6) complete
-* ✅ Zipfian (real-world distribution) analysis complete
+* BST implemented
+* B-Tree implemented
+* vEB implemented (correct)
+* Benchmarking complete
+* Hardware profiling complete
+* Graphs generated
+* Large-scale evaluation (1e6) complete
+* Zipfian (real-world distribution) analysis complete
 
-🚀 **Ready for research paper writing**
 
 ---
 
