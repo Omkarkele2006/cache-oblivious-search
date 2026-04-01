@@ -11,16 +11,29 @@
 #include "../common/timer.hpp"
 #include "workload_generator.hpp"
 
-const int NUM_RUNS = 5;
+const int NUM_RUNS = 3;
+
+// ================= MEMORY ESTIMATION =================
+
+// Approx BST node (int + 2 pointers)
+size_t estimate_bst_memory(int n) {
+    return n * (sizeof(int) + 2 * sizeof(void*));
+}
+
+// Approx B-Tree node (rough estimate)
+size_t estimate_btree_memory(int n) {
+    return n * (sizeof(int) * 2);  // simplified estimation
+}
+
+// vEB uses contiguous array
+size_t estimate_veb_memory(int n) {
+    return n * sizeof(int);
+}
 
 // ================= DATASET SAVE =================
 void save_dataset(const std::vector<int>& data, const std::string& filename) {
     std::ofstream out(filename);
-
-    for (int x : data) {
-        out << x << "\n";
-    }
-
+    for (int x : data) out << x << "\n";
     out.close();
 }
 
@@ -158,55 +171,66 @@ double veb_search(const std::vector<int>& data, std::ofstream& out, const std::s
 
 // ================= MAIN =================
 int main() {
-    std::ofstream outfile("src/benchmark/results.csv");
+
+    std::ofstream outfile("results/results.csv");
     outfile << "structure,workload,n,operation,time_ms,run_id\n";
 
-    std::vector<int> sizes = {1000, 5000, 10000, 20000};
+    std::ofstream memfile("results/memory_results.csv");
+    memfile << "structure,n,memory_bytes\n";
+
+    std::vector<int> sizes = {
+        1000, 5000, 10000, 20000,
+        50000, 100000, 200000, 500000, 1000000
+    };
 
     for (int n : sizes) {
+
         std::cout << "\n===== n = " << n << " =====\n";
+
+        // -------- MEMORY LOG (once per n) --------
+        memfile << "BST," << n << "," << estimate_bst_memory(n) << "\n";
+        memfile << "BTree," << n << "," << estimate_btree_memory(n) << "\n";
+        memfile << "vEB," << n << "," << estimate_veb_memory(n) << "\n";
 
         std::vector<std::pair<std::string, std::vector<int>>> workloads = {
             {"uniform", WorkloadGenerator::generate_uniform(n)},
             {"sorted", WorkloadGenerator::generate_sorted(n)},
-            {"reverse", WorkloadGenerator::generate_reverse_sorted(n)}
+            {"reverse", WorkloadGenerator::generate_reverse_sorted(n)},
+            {"zipfian", WorkloadGenerator::generate_zipfian(n)}
         };
 
         for (auto& [type, data] : workloads) {
 
+            bool skip_bst = (n > 100000 && (type == "sorted" || type == "reverse"));
+
             std::string filename = "data/raw/" + type + "_" + std::to_string(n) + ".csv";
             save_dataset(data, filename);
 
-            // -------- BST --------
-            std::cout << "[BST] Workload: " << type << std::endl;
-            double bst_ins = bst_insert(data, outfile, type, n);
-            double bst_srch = bst_search(data, outfile, type, n);
+            // BST
+            if (!skip_bst) {
+                std::cout << "[BST] Workload: " << type << std::endl;
+                bst_insert(data, outfile, type, n);
+                bst_search(data, outfile, type, n);
+            }
 
-            std::cout << "Insert: " << bst_ins << " ms\n";
-            std::cout << "Search: " << bst_srch << " ms\n";
-
-            // -------- B-TREE --------
+            // BTree
             std::cout << "[BTree] Workload: " << type << std::endl;
-            double bt_ins = btree_insert(data, outfile, type, n);
-            double bt_srch = btree_search(data, outfile, type, n);
+            btree_insert(data, outfile, type, n);
+            btree_search(data, outfile, type, n);
 
-            std::cout << "Insert: " << bt_ins << " ms\n";
-            std::cout << "Search: " << bt_srch << " ms\n";
-
-            // -------- VEB --------
+            // vEB
             std::cout << "[vEB] Workload: " << type << std::endl;
 
             std::vector<int> sorted_data = data;
             std::sort(sorted_data.begin(), sorted_data.end());
 
-            double veb_bld = veb_build(sorted_data, outfile, type, n);
-            double veb_srch = veb_search(sorted_data, outfile, type, n);
-
-            std::cout << "Build: " << veb_bld << " ms\n";
-            std::cout << "Search: " << veb_srch << " ms\n";
+            veb_build(sorted_data, outfile, type, n);
+            veb_search(sorted_data, outfile, type, n);
         }
     }
 
     outfile.close();
+    memfile.close();
+
     return 0;
 }

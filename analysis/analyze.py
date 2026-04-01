@@ -1,90 +1,67 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import os
 
-# ================= LOAD DATA =================
-df = pd.read_csv("results/results.csv")
+# Load data
+df = pd.read_csv("../results/results.csv")
 
-# ================= PROCESS =================
-# Group and compute mean + std
-grouped = df.groupby(["structure", "workload", "n", "operation"])
+df['structure'] = df['structure'].str.strip()
 
-stats = grouped["time_ms"].agg(["mean", "std"]).reset_index()
+# Separate
+search_df = df[df['operation'] == 'search']
+insert_df = df[df['operation'].isin(['insert', 'build'])]
 
-# Save processed data
-os.makedirs("data/processed", exist_ok=True)
-stats.to_csv("data/processed/summary.csv", index=False)
+search_mean = search_df.groupby(['structure', 'n', 'workload'])['time_ms'].mean().reset_index()
+insert_mean = insert_df.groupby(['structure', 'n', 'workload'])['time_ms'].mean().reset_index()
 
-print("✅ Summary saved to data/processed/summary.csv")
+# Helper function
+def plot_graph(data, workload, ylabel, title, filename, log=False):
+    plt.figure(figsize=(8,5))
 
-# ================= PLOTTING =================
-os.makedirs("analysis/plots", exist_ok=True)
+    for structure in data['structure'].unique():
+        subset = data[(data['structure'] == structure) & (data['workload'] == workload)]
+        if not subset.empty:
+            plt.plot(subset['n'], subset['time_ms'], marker='o', label=structure)
 
-structures = stats["structure"].unique()
-workloads = stats["workload"].unique()
+    if log:
+        plt.yscale('log')
 
-# -------- Plot: Search Performance --------
-for workload in workloads:
-    plt.figure()
-
-    for structure in structures:
-        subset = stats[
-            (stats["workload"] == workload) &
-            (stats["structure"] == structure) &
-            (stats["operation"] == "search")
-        ]
-
-        plt.errorbar(
-            subset["n"],
-            subset["mean"],
-            yerr=subset["std"],
-            label=structure,
-            marker='o'
-        )
-
-    plt.title(f"Search Performance ({workload})")
     plt.xlabel("Input Size (n)")
-    plt.ylabel("Time (ms)")
-    plt.yscale("log") 
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.grid(True)
     plt.legend()
-    plt.grid()
-
-    filename = f"analysis/plots/search_{workload}.png"
-    plt.savefig(filename)
+    plt.savefig(f"plots/{filename}")
     plt.close()
 
-    print(f"📊 Saved: {filename}")
+# -------------------------------
+# 📊 UNIFORM
+# -------------------------------
+plot_graph(search_mean, "uniform", "Search Time (ms)", "Search Performance (Uniform)", "search_uniform.png")
+plot_graph(insert_mean, "uniform", "Insert/Build Time (ms)", "Build Performance (Uniform)", "build_uniform.png")
 
-# -------- Plot: Build/Insert Performance --------
-for workload in workloads:
-    plt.figure()
+# -------------------------------
+# 📊 SORTED (Worst Case)
+# -------------------------------
+plot_graph(search_mean, "sorted", "Search Time (ms)", "Worst Case (Sorted Input)", "search_sorted.png")
 
-    for structure in structures:
-        op = "build" if structure == "vEB" else "insert"
+# -------------------------------
+# 📊 ZIPFIAN (NEW 🔥)
+# -------------------------------
+plot_graph(search_mean, "zipfian", "Search Time (ms)", "Search Performance (Zipfian)", "search_zipfian.png")
+plot_graph(insert_mean, "zipfian", "Insert/Build Time (ms)", "Build Performance (Zipfian)", "build_zipfian.png")
 
-        subset = stats[
-            (stats["workload"] == workload) &
-            (stats["structure"] == structure) &
-            (stats["operation"] == op)
-        ]
+# -------------------------------
+# 📊 LOG SCALE (Uniform)
+# -------------------------------
+plot_graph(search_mean, "uniform", "Search Time (log ms)", "Search Performance (Log Scale)", "search_log.png", log=True)
 
-        plt.errorbar(
-            subset["n"],
-            subset["mean"],
-            yerr=subset["std"],
-            label=structure,
-            marker='o'
-        )
+# -------------------------------
+# 📊 LOG SCALE (Zipfian 🔥)
+# -------------------------------
+plot_graph(search_mean, "zipfian", "Search Time (log ms)", "Search Performance (Zipfian Log Scale)", "search_zipfian_log.png", log=True)
 
-    plt.title(f"Build/Insert Performance ({workload})")
-    plt.xlabel("Input Size (n)")
-    plt.ylabel("Time (ms)")
-    plt.yscale("log")
-    plt.legend()
-    plt.grid()
+print("All graphs (including Zipfian) generated successfully!")
 
-    filename = f"analysis/plots/build_{workload}.png"
-    plt.savefig(filename)
-    plt.close()
-
-    print(f"📊 Saved: {filename}")
+# -------------------------------
+# 📊 MEMORY ANALYSIS (NEW 🔥)
+# -------------------------------
